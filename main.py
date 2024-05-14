@@ -45,6 +45,7 @@ def main():
     fps = 60
     level = 1
     lives = 5
+    velocity = 10
     main_font = pygame.font.SysFont("comicsans",50)
 
     ship = Ship(300,650)
@@ -72,4 +73,20 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+        #movement
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]: #left
+            if ship.x - velocity > 0: 
+                ship.x -= velocity
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]: #right
+            if ship.x + velocity + 50 < width:
+                ship.x += velocity
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]: #down
+            if ship.y + velocity + 50 < height:
+                ship.y += velocity
+        if keys[pygame.K_w] or keys[pygame.K_UP]: #up
+            if ship.y - velocity > main_font.get_height():
+                ship.y -= velocity
+ 
 main()

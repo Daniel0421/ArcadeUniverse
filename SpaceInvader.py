@@ -12,21 +12,21 @@ screen = pygame.display.set_mode((width,height))
 pygame.display.set_caption("Space Invader")
 
 #load assets (ships)
-redShip = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
-greenShip = pygame.image.load(os.path.join("assets","pixel_ship_green_small.png"))
-blueShip = pygame.image.load(os.path.join("assets","pixel_ship_blue_small.png"))
+redShip = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_ship_red_small.png"))
+greenShip = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_ship_green_small.png"))
+blueShip = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_ship_blue_small.png"))
 
 #load assets (players)
-yellowShip = pygame.image.load(os.path.join("assets","pixel_ship_yellow.png"))
-yellowLaser = pygame.image.load(os.path.join("assets","pixel_laser_yellow.png"))
+yellowShip = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_ship_yellow.png"))
+yellowLaser = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_laser_yellow.png"))
 
 #load assests (laser)
-redLaser = pygame.image.load(os.path.join("assets","pixel_laser_red.png"))
-greenLaser = pygame.image.load(os.path.join("assets","pixel_laser_green.png"))
-blueLaser = pygame.image.load(os.path.join("assets","pixel_laser_blue.png"))
+redLaser = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_laser_red.png"))
+greenLaser = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_laser_green.png"))
+blueLaser = pygame.image.load(os.path.join("assets", "SpaceInvader", "pixel_laser_blue.png"))
 
 #load assets (background)
-background = pygame.transform.scale(pygame.image.load(os.path.join("assets","background-black.png")),(width,height))
+background = pygame.transform.scale(pygame.image.load(os.path.join("assets", "SpaceInvader", "background-black.png")),(width,height))
 
 class Ship:
     def __init__(self, x, y, health=100):

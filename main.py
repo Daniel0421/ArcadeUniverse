@@ -18,6 +18,7 @@ blueShip = pygame.image.load(os.path.join("assets","pixel_ship_blue_small.png"))
 
 #load assets (players)
 yellowShip = pygame.image.load(os.path.join("assets","pixel_ship_yellow.png"))
+yellowLaser = pygame.image.load(os.path.join("assets","pixel_laser_yellow.png"))
 
 #load assests (laser)
 redLaser = pygame.image.load(os.path.join("assets","pixel_laser_red.png"))
@@ -38,7 +39,16 @@ class Ship:
         self.cooltime = 0
 
     def draw(self, window):
-        pygame.draw.rect(window, (255,0,0), (self.x,self.y,50,50))
+        screen.blit(self.ship_img, (self.x,self.y))
+
+#inherit Ship class into Player class
+class Player(Ship):
+    def __init__(self,x,y,health=100):
+        super().__init__(x,y,health)
+        self.ship_img = yellowShip
+        self.ship_laser = yellowLaser
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.maxHealth = health
 
 def main():
     running = True
@@ -48,7 +58,7 @@ def main():
     velocity = 10
     main_font = pygame.font.SysFont("comicsans",50)
 
-    ship = Ship(300,650)
+    player = Player(300,650)
 
     clock = pygame.time.Clock()
 
@@ -63,7 +73,7 @@ def main():
         screen.blit(lives_label, (10,10))
         screen.blit(level_label, (width-level_label.get_width()-10,10))
 
-        ship.draw(screen)
+        player.draw(screen)
 
         pygame.display.update()
 
@@ -77,16 +87,16 @@ def main():
         #movement
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] or keys[pygame.K_LEFT]: #left
-            if ship.x - velocity > 0: 
-                ship.x -= velocity
+            if player.x - velocity > 0: 
+                player.x -= velocity
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]: #right
-            if ship.x + velocity + 50 < width:
-                ship.x += velocity
+            if player.x + velocity + player.ship_img.get_width() < width:
+                player.x += velocity
         if keys[pygame.K_s] or keys[pygame.K_DOWN]: #down
-            if ship.y + velocity + 50 < height:
-                ship.y += velocity
+            if player.y + velocity + player.ship_img.get_height() < height:
+                player.y += velocity
         if keys[pygame.K_w] or keys[pygame.K_UP]: #up
-            if ship.y - velocity > main_font.get_height():
-                ship.y -= velocity
+            if player.y - velocity > main_font.get_height():
+                player.y -= velocity
  
 main()

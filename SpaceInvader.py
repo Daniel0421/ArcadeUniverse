@@ -113,6 +113,14 @@ class Player(Ship):
                         objs.remove(obj)
                         self.lasers.remove(laser)
 
+    def draw(self, screen):
+        super().draw(screen)
+        self.health_bar(screen)
+
+    def health_bar(self,screen):
+        pygame.draw.rect(screen, (255,0,0), (self.x, self.y+self.ship_img.get_height()+10, self.ship_img.get_width(),10))
+        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y + self.ship_img.get_height()+10, self.ship_img.get_width()*(self.health/self.maxHealth),10))
+
 
 class Enemy(Ship):
     # Classify images into colors
@@ -132,7 +140,7 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cool_time == 0:
-            laser = Bullet(self.x-20,self.y,self.ship_laser)
+            laser = Bullet(self.x-20, self.y, self.ship_laser)
             self.lasers.append(laser)
             self.cool_time = 1
 
@@ -148,14 +156,14 @@ def main():
     fps = 60
     level = 0
     lives = 5
-    player_velocity = 10
+    player_velocity = 8
     main_font = pygame.font.SysFont("comicsans", 50)
     lost_font = pygame.font.SysFont("comicsans", 60)
     enemy = []
     wavelength = 5
-    enemy_velocity = 3
+    enemy_velocity = 2
     bullet_velocity = 6
-    player = Player(300, 650)
+    player = Player(300, 630)
     clock = pygame.time.Clock()
     lost = False
     lost_timer = 0
@@ -194,28 +202,32 @@ def main():
                 continue
         if len(enemy) == 0:  # increment level if all enemy ships are destroyed
             level += 1
-            # wavelength += 5
+            enemy_velocity += 0.1
+            player_velocity += 0.5
+            if player.health != player.maxHealth:
+                player.health += 0.5*player.health
+
             for i in range(wavelength):
                 new_enemy = Enemy(random.randrange(50, width-100),random.randrange(-1500, -500),random.choice(["red", "green", "blue"]))
                 enemy.append(new_enemy)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
 
         # movement
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:  # left
-            if player.x - player_velocity > 0:
+            if player.x - player_velocity - 10 > 0:
                 player.x -= player_velocity
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:  # right
-            if player.x + player_velocity + player.ship_img.get_width() < width:
+            if player.x + player_velocity + player.ship_img.get_width() + 5 < width:
                 player.x += player_velocity
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:  # down
-            if player.y + player_velocity + player.ship_img.get_height() < height:
+            if player.y + player_velocity + player.ship_img.get_height() + 20 + player_velocity < height:
                 player.y += player_velocity
         if keys[pygame.K_w] or keys[pygame.K_UP]:  # up
-            if player.y - player_velocity > main_font.get_height():
+            if player.y - player_velocity - 10 > main_font.get_height():
                 player.y -= player_velocity
         if keys[pygame.K_SPACE]:
             player.shoot()
@@ -226,12 +238,31 @@ def main():
 
             if random.randrange(0, 2 * 60) == 1:
                 ship.shoot()
-
-            if ship.y + ship.ship_img.get_height() > height:
+            if collide(ship, player):
+                player.health -= 10
+                enemy.remove(ship)
+            elif ship.y + ship.ship_img.get_height() > height:
                 lives -= 1
                 enemy.remove(ship)
 
         player.move_laser(-bullet_velocity, enemy)
 
 
-main()
+def main_menu():
+    menu_font = pygame.font.SysFont("comicsans", 60)
+
+    running = True
+    while running:
+        screen.blit(background, (0, 0))
+        menu_label = menu_font.render("Press any key to begin", 1, (255, 255, 255))
+        screen.blit(menu_label, (width/2-menu_label.get_width()/2, height/2 - menu_label.get_height()))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                main()
+    pygame.quit()
+
+
+main_menu()

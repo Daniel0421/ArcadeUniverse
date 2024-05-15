@@ -23,7 +23,7 @@ class Board:
         for row in range(self.size[0]):
             for col in range(self.size[1]):
                 tile = self.getTile((row, col))
-                neighbor = self.getNeighborList(tile)
+                neighbor = self.getNeighborList((row, col))
                 tile.setNeighbor(neighbor)
 
     def getNeighborList(self, index):

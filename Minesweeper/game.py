@@ -1,7 +1,6 @@
 import pygame
 import os
 
-
 class Game():
     def __init__(self, board, window):
         self.image = None
@@ -19,8 +18,14 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    position = pygame.mouse.get_pos()
+                    rightClick = pygame.mouse.get_pressed()[2]
+                    self.handleClick(position, rightClick)
                 self.draw()
             pygame.display.flip()
+            if self.board.getWin():
+                running = False
         pygame.quit()
 
     def draw(self):
@@ -42,5 +47,17 @@ class Game():
                 self.image[file.split(".")[0]] = image
 
     def initImage(self, tile):
-        string = "unclicked-bomb" if tile.getHasBomb() else "empty-block"
+        string = None
+        if tile.getClicked():
+            string = "bomb-at-clicked-block" if tile.getHasBomb() else str(tile.getBoundary())
+        else:
+            string = "flag" if tile.getFlagged() else "empty-block"
+
         return self.image[string]
+
+    def handleClick(self, position, rightClick):
+        if self.board.getLost():
+            return
+        index = position[1] // self.tileSize[1], position[0] // self.tileSize[0]
+        tile = self.board.getTile(index)
+        self.board.handleClick(tile, rightClick)

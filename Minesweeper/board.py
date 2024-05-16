@@ -30,11 +30,7 @@ class Board:
         for row in range(self.size[0]):
             for col in range(self.size[1]):
                 tile = self.getTile((row, col))
-<<<<<<< HEAD
                 neighbor = self.getListOfNeighbors((row, col))
-=======
-                neighbor = self.getNeighborList((row, col))
->>>>>>> b111de09507e09705f82de5aa3da20d870905646
                 tile.setNeighbor(neighbor)
 
     def getListOfNeighbors(self, index):
@@ -73,6 +69,7 @@ class Board:
 
     def getLost(self):
         return self.lost
+
     def getWin(self):
         return self.numNonBomb == self.numClicked
 

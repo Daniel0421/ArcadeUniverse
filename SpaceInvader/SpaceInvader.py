@@ -203,8 +203,8 @@ def main():
             level += 1
             enemy_velocity += 0.1
             player_velocity += 0.5
-            if player.health != player.maxHealth:
-                player.health += 0.5*player.health
+            # if player.health != player.maxHealth:
+            #    player.health += 0.5*player.health
 
             for i in range(wavelength):
                 new_enemy = Enemy(random.randrange(50, width-100),random.randrange(-1500, -500),random.choice(["red", "green", "blue"]))

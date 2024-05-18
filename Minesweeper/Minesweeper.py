@@ -33,7 +33,7 @@ def main_menu():
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                quit()
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 game.reset()
                 board.reset()

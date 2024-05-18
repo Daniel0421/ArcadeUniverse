@@ -14,7 +14,6 @@ menu_font = pygame.font.SysFont("comicsans", 40)
 game = Game(board, (width, height))
 
 def main_menu():
-    #clock = pygame.time.Clock()
     running = True
 
     # Blinking message
@@ -40,7 +39,6 @@ def main_menu():
                 board.reset()
                 game.run()
 
-        #clock.tick(60)
     pygame.quit()
 
 main_menu()

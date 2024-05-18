@@ -1,6 +1,3 @@
-import time
-
-import pygame
 import os
 import pygame.font
 

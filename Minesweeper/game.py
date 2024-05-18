@@ -29,7 +29,7 @@ class Game:
                 self.draw()
             pygame.display.flip()
             if self.board.getWin() or self.board.getLost():
-                pygame.time.delay(2000)
+                pygame.time.delay(1000)
                 running = False
             pygame.display.flip()
 

@@ -9,12 +9,11 @@ size = (9, 9)
 prob = 0.5
 board = Board(size, prob)
 width, height = 750, 750
-game = Game(board, (width, height))
+screen = pygame.display.set_mode((width, height))
+menu_font = pygame.font.SysFont("comicsans", 40)
 
 def main_menu():
-    screen = pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()
-    menu_font = pygame.font.SysFont("comicsans", 40)
     running = True
 
     # Blinking message
@@ -41,4 +40,5 @@ def main_menu():
         clock.tick(60)
     pygame.quit()
 
+game = Game(board, (width, height), main_menu)
 main_menu()

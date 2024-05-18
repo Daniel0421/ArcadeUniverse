@@ -40,3 +40,8 @@ class Tile:
     def getNeighborList(self):
         return self.neighbor
 
+    def rest(self):
+        self.bomb = None
+        self.neighbor = None
+        self.clicked = False
+        self.flagged = False

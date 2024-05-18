@@ -11,9 +11,10 @@ board = Board(size, prob)
 width, height = 750, 750
 screen = pygame.display.set_mode((width, height))
 menu_font = pygame.font.SysFont("comicsans", 40)
+game = Game(board, (width, height))
 
 def main_menu():
-    clock = pygame.time.Clock()
+    #clock = pygame.time.Clock()
     running = True
 
     # Blinking message
@@ -35,10 +36,11 @@ def main_menu():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                game.reset()
+                board.reset()
                 game.run()
 
-        clock.tick(60)
+        #clock.tick(60)
     pygame.quit()
 
-game = Game(board, (width, height), main_menu)
 main_menu()

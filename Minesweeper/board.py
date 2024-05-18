@@ -73,3 +73,10 @@ class Board:
     def getWin(self):
         return self.numNonBomb == self.numClicked
 
+    def reset(self):
+        self.board = None
+        self.win = False
+        self.lost = False
+        self.numClicked = 0
+        self.numNonBomb = 9
+        self.initBoard()

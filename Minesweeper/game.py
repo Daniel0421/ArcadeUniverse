@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import os
 import pygame.font
@@ -6,10 +8,9 @@ pygame.font.init()
 lost_font = pygame.font.SysFont("comicsans", 60)
 lost_label = lost_font.render("Game Over", 1, (0, 0, 0))
 class Game:
-    def __init__(self, board, window, main_menu):
+    def __init__(self, board, window):
         self.image = None
         self.screen = None
-        self.home = main_menu
         self.board = board
         self.window = window
         self.tileSize = self.window[0]//self.board.getSize()[1], self.window[1]//self.board.getSize()[0]
@@ -30,16 +31,11 @@ class Game:
                     self.handleClick(position, rightClick)
                 self.draw()
             pygame.display.flip()
-            if self.board.getWin():
+            if self.board.getWin() or self.board.getLost():
+                pygame.time.delay(2000)
                 running = False
-            if self.board.getLost():
-                break
-        self.screen.fill((200, 200, 200))
-        self.screen.blit(lost_label, (self.window[0]/2-lost_label.get_width()/2,self.window[1]/2-lost_label.get_height()/2))
-        pygame.display.flip()
-        pygame.time.delay(2000)
-        #pygame.quit()
-        self.home()
+            pygame.display.flip()
+
 
     def draw(self):
         start = (0, 0)
@@ -74,3 +70,8 @@ class Game:
         index = position[1] // self.tileSize[1], position[0] // self.tileSize[0]
         tile = self.board.getTile(index)
         self.board.handleClick(tile, rightClick)
+
+    def reset(self):
+        self.image = None
+        self.screen = None
+        self.loadImage()

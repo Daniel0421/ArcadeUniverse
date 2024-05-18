@@ -69,11 +69,11 @@ while True:
     screen.blit(next_surface, (375, 180, 50, 50))
 
     if game_state == HOME and show_message:
-        screen.blit(start_surface, (320, 650, 50, 50))
+        screen.blit(start_surface, (320, 450+2*game_over_surface.get_height(), 50, 50))
     elif game.game_over:
         screen.blit(game_over_surface, (320, 450, 50, 50))
         if show_message:
-            screen.blit(start_surface, (320, 650, 50, 50))
+            screen.blit(start_surface, (320, 450+2*game_over_surface.get_height(), 50, 50))
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10)
     screen.blit(score_value_surface,
                 score_value_surface.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))

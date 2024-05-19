@@ -32,7 +32,7 @@ GAME_UPDATE = pygame.USEREVENT
 BLINK_UPDATE = pygame.USEREVENT + 1
 pygame.time.set_timer(GAME_UPDATE, 200)
 pygame.time.set_timer(BLINK_UPDATE, 500)
-pygame.key.set_repeat(100,200)
+pygame.key.set_repeat(100, 200)
 
 show_message = True
 

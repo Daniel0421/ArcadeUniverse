@@ -4,6 +4,7 @@ import sys
 from colors import Colors
 from game import Game
 
+
 pygame.init()
 
 title_font = pygame.font.Font(None, 40)

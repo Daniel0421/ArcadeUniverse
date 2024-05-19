@@ -31,6 +31,7 @@ GAME_UPDATE = pygame.USEREVENT
 BLINK_UPDATE = pygame.USEREVENT + 1
 pygame.time.set_timer(GAME_UPDATE, 200)
 pygame.time.set_timer(BLINK_UPDATE, 500)
+pygame.key.set_repeat(100,200)
 
 show_message = True
 
@@ -59,7 +60,6 @@ while True:
             game.move_down()
         if event.type == BLINK_UPDATE:
             show_message = not show_message
-
 
     # Drawing
     score_value_surface = title_font.render(str(game.score), True, Colors.white)

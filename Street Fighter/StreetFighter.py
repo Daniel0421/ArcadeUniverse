@@ -16,6 +16,7 @@ last_cnt_update = pygame.time.get_ticks()
 score = [0,0]
 round_over = False
 round_over_cooldown = 2000
+game_start = True
 
 warrior_size = 162
 warrior_scale = 4

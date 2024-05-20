@@ -6,7 +6,7 @@ import time
 pygame.font.init()
 
 size = (9, 9)
-prob = 0.5
+prob = 0.4
 board = Board(size, prob)
 width, height = 750, 750
 screen = pygame.display.set_mode((width, height))

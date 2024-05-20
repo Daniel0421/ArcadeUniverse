@@ -18,5 +18,4 @@ while run:
             sys.exit()
 
 
-
 pygame.quit()

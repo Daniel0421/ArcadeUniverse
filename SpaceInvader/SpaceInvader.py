@@ -9,6 +9,7 @@ pygame.font.init()
 pygame.init()
 width = 750
 height = 750
+blinkInterval = 0.5
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Space Invader")
 
@@ -249,12 +250,19 @@ def main():
 
 def main_menu():
     menu_font = pygame.font.SysFont("comicsans", 60)
+    lastVisibleTime = 0.5
+    textVisible = True
 
     running = True
     while running:
         screen.blit(background, (0, 0))
-        menu_label = menu_font.render("Press any key to begin", 1, (255, 255, 255))
-        screen.blit(menu_label, (width/2-menu_label.get_width()/2, height/2 - menu_label.get_height()))
+        currentTime = time.time()
+        if currentTime - lastVisibleTime >= blinkInterval:
+            textVisible = not textVisible
+            lastVisibleTime = currentTime
+        if textVisible:
+            menu_label = menu_font.render("Press any key to begin", 1, (255, 255, 255))
+            screen.blit(menu_label, (width/2-menu_label.get_width()/2, height/2 - menu_label.get_height()))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

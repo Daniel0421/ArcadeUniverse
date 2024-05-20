@@ -10,6 +10,7 @@ prob = 0.4
 board = Board(size, prob)
 width, height = 750, 750
 screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Minesweeper")
 menu_font = pygame.font.SysFont("comicsans", 40)
 game = Game(board, (width, height))
 

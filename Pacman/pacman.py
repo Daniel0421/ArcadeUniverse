@@ -67,7 +67,7 @@ def drawPlayer():
 running = True
 while running:
     clock.tick(fps)
-    if counter < 19:
+    if counter < fps/3-1:
         counter += 1
     else:
         counter = 0

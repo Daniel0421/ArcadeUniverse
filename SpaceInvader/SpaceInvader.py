@@ -249,7 +249,7 @@ def main():
 
 
 def main_menu():
-    menu_font = pygame.font.SysFont("comicsans", 60)
+    menu_font = pygame.font.SysFont("comic-sans", 60)
     lastVisibleTime = 0.5
     textVisible = True
 

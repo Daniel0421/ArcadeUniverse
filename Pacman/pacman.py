@@ -13,6 +13,7 @@ level = boardList
 color = "blue"
 pi = math.pi
 playerImg = []
+flicker = False
 
 for i in range(1,5):
     playerImg.append(pygame.transform.scale(pygame.image.load(f'assets/player_images/{i}.png'), (35, 35)))
@@ -28,7 +29,7 @@ def drawBoard():
             if level[row][col] == 1:
                 pygame.draw.circle(screen, "white", [col * num2 + (0.5 * num2), row * num1 +
                                                      (0.5 * num1)], 4)
-            if level[row][col] == 2:
+            if level[row][col] == 2 and not flicker:
                 pygame.draw.circle(screen, "white", [col * num2 + (0.5 * num2), row * num1 +
                                                      (0.5 * num1)], 10)
             if level[row][col] == 3:
@@ -69,8 +70,11 @@ while running:
     clock.tick(fps)
     if counter < fps/3-1:
         counter += 1
+        if counter > 3:
+            flicker = False
     else:
         counter = 0
+        flicker = True
 
     screen.fill("black")
     drawBoard()

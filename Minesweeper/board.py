@@ -10,11 +10,12 @@ class Board:
         self.win = False
         self.lost = False
         self.numClicked = 0
-        self.numNonBomb = 9
+        self.numNonBomb = 0
         self.initBoard()
 
     def initBoard(self):
         self.board = []
+        self.numNonBomb = 0
         for row in range(self.size[0]):
             row = []
             for col in range(self.size[1]):
@@ -78,5 +79,5 @@ class Board:
         self.win = False
         self.lost = False
         self.numClicked = 0
-        self.numNonBomb = 9
+        self.numNonBomb = 0
         self.initBoard()

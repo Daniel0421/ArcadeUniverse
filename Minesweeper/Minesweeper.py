@@ -31,6 +31,8 @@ def main_menu():
         currentTime = time.time()
         if board.getLost():
             screen.blit(lost_label, (width//2 - lost_label.get_width()//2, height//3))
+        if board.getWin():
+            screen.blit(won_label, (width//2 - lost_label.get_width()//2, height//3))
         if currentTime - lastVisibleTime >= blinkInterval:
             textVisible = not textVisible
             lastVisibleTime = currentTime

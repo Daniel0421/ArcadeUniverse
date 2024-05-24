@@ -117,17 +117,21 @@ class Player(Ship):
         super().draw(screen)
         self.health_bar(screen)
 
-    def health_bar(self,screen):
-        pygame.draw.rect(screen, (255,0,0), (self.x, self.y+self.ship_img.get_height()+10, self.ship_img.get_width(),10))
-        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y + self.ship_img.get_height()+10, self.ship_img.get_width()*(self.health/self.maxHealth),10))
+    def health_bar(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0),
+                         (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(screen, (0, 255, 0), (
+            self.x, self.y + self.ship_img.get_height() + 10,
+            self.ship_img.get_width() * (self.health / self.maxHealth),
+            10))
 
 
 class Enemy(Ship):
     # Classify images into colors
     colorMap = {
-                "red": (redShip, redLaser),
-                "green": (greenShip, greenLaser),
-                "blue": (blueShip, blueLaser)
+        "red": (redShip, redLaser),
+        "green": (greenShip, greenLaser),
+        "blue": (blueShip, blueLaser)
     }
 
     def __init__(self, x, y, color, health=100):
@@ -140,7 +144,7 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cool_time == 0:
-            laser = Bullet(self.x-20, self.y, self.ship_laser)
+            laser = Bullet(self.x - 20, self.y, self.ship_laser)
             self.lasers.append(laser)
             self.cool_time = 1
 
@@ -179,13 +183,13 @@ def main():
         screen.blit(lives_label, (10, 10))
         screen.blit(level_label, (width - level_label.get_width() - 10, 10))
 
-        for bot in enemy:   # draw enemy ships
+        for bot in enemy:  # draw enemy ships
             bot.draw(screen)
 
         player.draw(screen)  # draw player ship
         if lost:
             lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
-            screen.blit(lost_label,(width/2-lost_label.get_width()/2,height/2-lives_label.get_height()))
+            screen.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lives_label.get_height()))
 
         pygame.display.update()
 
@@ -194,9 +198,9 @@ def main():
         redraw_window()
         if lives <= 0 or player.health <= 0:
             lost = True
-            lost_timer += 1     # increment lost pause timer
+            lost_timer += 1  # increment lost pause timer
         if lost:
-            if lost_timer > fps * 3:   # if lost message shows for 3 seconds quit game
+            if lost_timer > fps * 3:  # if lost message shows for 3 seconds quit game
                 running = False
             else:
                 continue
@@ -208,7 +212,8 @@ def main():
             #    player.health += 0.5*player.health
 
             for i in range(wavelength):
-                new_enemy = Enemy(random.randrange(50, width-100),random.randrange(-1500, -500),random.choice(["red", "green", "blue"]))
+                new_enemy = Enemy(random.randrange(50, width - 100), random.randrange(-1500, -500),
+                                  random.choice(["red", "green", "blue"]))
                 enemy.append(new_enemy)
 
         for event in pygame.event.get():
@@ -262,7 +267,7 @@ def main_menu():
             lastVisibleTime = currentTime
         if textVisible:
             menu_label = menu_font.render("Press any key to begin", 1, (255, 255, 255))
-            screen.blit(menu_label, (width/2-menu_label.get_width()/2, height/2 - menu_label.get_height()))
+            screen.blit(menu_label, (width / 2 - menu_label.get_width() / 2, height / 2 - menu_label.get_height()))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -97,7 +97,10 @@ class Game_menu:
 
             # insert game title and image
             midpointY = newHeight // 2
-            pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, midpointY))
+            gameImagePath = os.path.join(self.gameList[gameTile], "assets", "logo.png")
+            gameImage = pygame.transform.scale(pygame.image.load(gameImagePath), (newWidth, midpointY))
+            screen.blit(gameImage, (newX, newY))
+            # pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, midpointY))
 
 game = Game_menu(screenWidth, screenHeight, gameList)
 
@@ -109,7 +112,6 @@ while running:
     game.drawGameOuter(screen)
     game.drawGameInner(screen)
     pygame.display.flip()
-    print(gameList)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

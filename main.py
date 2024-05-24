@@ -55,14 +55,6 @@ def getGameList():
 
 gameList = sorted(getGameList())
 
-
-def drawMenu(games):
-    for i in range(len(games)):
-        menuLabel = font.render(games[i], True, "white")
-        screen.blit(menuLabel, (screenWidth // 2 - menuLabel.get_width() // 2, 2 * logo.get_height() +
-                                i * menuLabel.get_height() * 1.5))
-
-
 def drawBackground(bg, lgo, lbl):
     screen.blit(bg, (0, 0))
     screen.blit(lgo, (screenWidth // 2 - logo.get_width() // 2, logo.get_height() // 2))
@@ -130,7 +122,6 @@ running = True
 while running:
     clock.tick(fps)
     drawBackground(background, logo, authorLabel)
-    # drawMenu(gameList)
     game.drawGameOuter(screen)
     game.drawGameInner(screen)
     pygame.display.flip()

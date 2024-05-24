@@ -53,7 +53,7 @@ def getGameList():
     return games
 
 
-gameList = getGameList()
+gameList = sorted(getGameList())
 
 
 def drawMenu(games):
@@ -83,24 +83,45 @@ class Game_menu:
 
     def drawGameOuter(self, screenSize):
         pygame.draw.rect(screenSize, "white", pygame.Rect(self.rectX, self.rectY, self.rectWidth,
-                                                          self.rectHeight), 2)
+                                                          self.rectHeight), 2, border_radius=10)
 
     def drawGameInner(self, screenSize):
         newY = self.rectY + self.padding
         newHeight = self.rectHeight - 2 * self.padding
         newWidth = (self.rectWidth - (len(self.gameList) + 1) * self.padding) / (len(self.gameList))
+        midpointY = newHeight // 2
 
-        for gameTile in range(len(self.gameList)):
+        # inserting button and image
+        for imageTile in range(len(self.gameList)):
             # drawing game tile
-            newX = self.rectX + self.padding + gameTile * (newWidth + self.padding)
-            pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, newHeight), 2)
+            newX = self.rectX + self.padding + imageTile * (newWidth + self.padding)
+            pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, newHeight), 2,
+                             border_radius=10)
 
-            # insert game title and image
-            midpointY = newHeight // 2
-            gameImagePath = os.path.join(self.gameList[gameTile], "assets", "logo.png")
-            gameImage = pygame.transform.scale(pygame.image.load(gameImagePath), (newWidth, midpointY))
-            screen.blit(gameImage, (newX, newY))
-            # pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, midpointY))
+            # insert image
+            imagePath = os.path.join(self.gameList[imageTile], "assets", "logo.png")
+            imageLoad = pygame.image.load(imagePath)
+            factor = (midpointY - 2 * self.padding) / imageLoad.get_height()
+            imageScale = pygame.transform.scale_by(imageLoad, factor)
+            imageCenter = newWidth // 2 - imageScale.get_width() // 2
+            screen.blit(imageScale, (newX + imageCenter, newY + self.padding))
+
+            # insert title
+            titleLabel = font.render(gameList[imageTile].upper(), True, "white")
+            titleCenter = newWidth // 2 - titleLabel.get_width() // 2
+            if titleLabel.get_width() >= newWidth:
+                title = gameList[imageTile].split()
+                label = []
+                for word in title:
+                    label.append(word)
+                for i in range(len(label)):
+                    titleLabel = font.render(label[i].upper(), True, "white")
+                    titleCenter = newWidth // 2 - titleLabel.get_width() // 2
+                    screen.blit(titleLabel, (newX + titleCenter, newY + midpointY + self.padding +
+                                             i * titleLabel.get_height()))
+            else:
+                screen.blit(titleLabel, (newX + titleCenter, newY + midpointY + self.padding))
+
 
 game = Game_menu(screenWidth, screenHeight, gameList)
 

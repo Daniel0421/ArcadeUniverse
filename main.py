@@ -104,11 +104,12 @@ class Game_menu:
             factor = (midpointY - 2 * self.padding) / imageLoad.get_height()
             imageScale = pygame.transform.scale_by(imageLoad, factor)
             imageCenter = newWidth // 2 - imageScale.get_width() // 2
-            screen.blit(imageScale, (newX + imageCenter, newY + self.padding))
+            screen.blit(imageScale, (newX + imageCenter, newY + 2 * self.padding))
 
             # insert title
             titleLabel = font.render(gameList[imageTile].upper(), True, "white")
             titleCenter = newWidth // 2 - titleLabel.get_width() // 2
+            titleCenterY = newY + 1.5 * midpointY - titleLabel.get_height() // 2
             if titleLabel.get_width() >= newWidth:
                 title = gameList[imageTile].split()
                 label = []
@@ -117,10 +118,10 @@ class Game_menu:
                 for i in range(len(label)):
                     titleLabel = font.render(label[i].upper(), True, "white")
                     titleCenter = newWidth // 2 - titleLabel.get_width() // 2
-                    screen.blit(titleLabel, (newX + titleCenter, newY + midpointY + self.padding +
-                                             i * titleLabel.get_height()))
+                    titleCenterY = newY + 1.5 * midpointY - titleLabel.get_height()
+                    screen.blit(titleLabel, (newX + titleCenter, titleCenterY + i * titleLabel.get_height()))
             else:
-                screen.blit(titleLabel, (newX + titleCenter, newY + midpointY + self.padding))
+                screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
 
 
 game = Game_menu(screenWidth, screenHeight, gameList)

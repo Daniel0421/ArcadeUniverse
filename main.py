@@ -4,6 +4,7 @@ import os
 # initialize pygame and font
 pygame.init()
 pygame.font.init()
+pygame.display.set_caption("Arcade Universe")
 
 # initialize constants
 padding = 10
@@ -54,11 +55,12 @@ def getGameList():
 
 
 gameList = sorted(getGameList())
+optionList = ['OPTIONS', 'QUIT']
 
 def drawBackground(bg, lgo, lbl):
     screen.blit(bg, (0, 0))
     screen.blit(lgo, (screenWidth // 2 - logo.get_width() // 2, logo.get_height() // 2))
-    screen.blit(lbl, (screenWidth - padding - authorLabel.get_width(), screenHeight - padding -
+    screen.blit(lbl, (screenWidth // 2 - padding - authorLabel.get_width() // 2, screenHeight - padding -
                       authorLabel.get_height()))
 
 
@@ -70,7 +72,7 @@ class Game_menu:
         self.rectHeight = height * 0.3
         self.rectX = width // 2 - self.rectWidth // 2
         self.rectY = height // 2 - self.rectHeight // 2
-        self.padding = 5
+        self.padding = padding
         self.gameList = games
 
     def drawGameOuter(self, screenSize):
@@ -115,8 +117,30 @@ class Game_menu:
             else:
                 screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
 
+class Option_menu(Game_menu):
+    def __init__(self, options):
+        super().__init__(screenWidth, screenHeight, gameList)
+        self.options = optionList
+        self.startY = self.rectY + self.padding + self.rectHeight
+
+
+    def drawBox(self):
+        for i in range(len(self.options)):
+
+            # draw box
+            width = (self.rectWidth - self.padding) // len(self.options)
+            startX = self.rectX + i * (width + self.padding)
+            pygame.draw.rect(screen, "white", pygame.Rect(startX, self.startY, width, 50), 2, border_radius=10)
+
+            # draw text
+            optionLabel = font.render(self.options[i], True, "white")
+            optionX = startX + width // 2 - optionLabel.get_width() // 2
+            optionY = self.startY + 25 - optionLabel.get_height() // 2
+            screen.blit(optionLabel, (optionX, optionY))
+
 
 game = Game_menu(screenWidth, screenHeight, gameList)
+option = Option_menu(optionList)
 
 running = True
 while running:
@@ -124,6 +148,8 @@ while running:
     drawBackground(background, logo, authorLabel)
     game.drawGameOuter(screen)
     game.drawGameInner(screen)
+    option.drawBox()
+
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

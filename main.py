@@ -56,6 +56,10 @@ def getGameList():
 
 gameList = sorted(getGameList())
 optionList = ['OPTIONS', 'QUIT']
+menuList = [[0 * len(gameList)], [0 * len(optionList)]]
+menuList[0][0] = 1
+# [['Mine Sweeper', 'Space Invader', 'Street Fighter', 'Tetris'],
+# ['OPTIONS', 'QUIT']]
 
 def drawBackground(bg, lgo, lbl):
     screen.blit(bg, (0, 0))
@@ -118,7 +122,7 @@ class Game_menu:
                 screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
 
 class Option_menu(Game_menu):
-    def __init__(self, options):
+    def __init__(self):
         super().__init__(screenWidth, screenHeight, gameList)
         self.options = optionList
         self.startY = self.rectY + self.padding + self.rectHeight
@@ -140,7 +144,7 @@ class Option_menu(Game_menu):
 
 
 game = Game_menu(screenWidth, screenHeight, gameList)
-option = Option_menu(optionList)
+option = Option_menu()
 
 running = True
 while running:

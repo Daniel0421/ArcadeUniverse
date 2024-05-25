@@ -43,7 +43,6 @@ logo = pygame.transform.scale(getLogo, (0.5 * getLogo.get_width(), 0.5 * getLogo
 # render texts
 authorLabel = detailFont.render("Made by: Hyunseok Cho, Jihwan Kim", True, "white")
 
-
 # game list
 def getGameList():
     games = []
@@ -53,13 +52,11 @@ def getGameList():
             games.append(entry)
     return games
 
-
 gameList = sorted(getGameList())
 optionList = ['OPTIONS', 'QUIT']
-# menuList = [False] * (len(gameList) + len(optionList))
-# menuList[0] = True
 
-menuList = [True, False, False, False, False, False]
+menuList = [False] * (len(gameList) + len(optionList))
+menuList[0] = True
 
 # [['Mine Sweeper', 'Space Invader', 'Street Fighter', 'Tetris'],
 # ['OPTIONS', 'QUIT']]
@@ -75,7 +72,6 @@ def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
                       lbl.get_height()))
     pygame.draw.rect(screenSize, "white", pygame.Rect(rectX, rectY, rectWidth,
                                                       rectHeight), 2, border_radius=10)
-
 
 class Game_menu:
     def __init__(self, width, height, games, pdg, opn):
@@ -143,7 +139,7 @@ class Game_menu:
         hoverColor = "green"
         baseColor = "white"
         baseThickness = 2
-        hoverThickness = 5
+        hoverThickness = 4
 
         # draw game tiles
         for imageTile in range(len(self.gameList)):

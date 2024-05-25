@@ -61,29 +61,32 @@ menuList[0][0] = 1
 # [['Mine Sweeper', 'Space Invader', 'Street Fighter', 'Tetris'],
 # ['OPTIONS', 'QUIT']]
 
-def drawBackground(bg, lgo, lbl):
+def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
+    rectWidth = width * 0.8
+    rectHeight = height * 0.3
+    rectX = width // 2 - rectWidth // 2
+    rectY = height // 2 - rectHeight // 2
     screen.blit(bg, (0, 0))
-    screen.blit(lgo, (screenWidth // 2 - logo.get_width() // 2, logo.get_height() // 2))
-    screen.blit(lbl, (screenWidth // 2 - padding - authorLabel.get_width() // 2, screenHeight - padding -
-                      authorLabel.get_height()))
+    screen.blit(lgo, (width // 2 - lgo.get_width() // 2, lgo.get_height() // 2))
+    screen.blit(lbl, (width // 2 - pdg - lbl.get_width() // 2, height - pdg -
+                      lbl.get_height()))
+    pygame.draw.rect(screenSize, "white", pygame.Rect(rectX, rectY, rectWidth,
+                                                      rectHeight), 2, border_radius=10)
 
 
 class Game_menu:
-    def __init__(self, width, height, games):
+    def __init__(self, width, height, games, pdg):
         self.screenWidth = width
         self.screenHeight = height
         self.rectWidth = width * 0.8
         self.rectHeight = height * 0.3
         self.rectX = width // 2 - self.rectWidth // 2
         self.rectY = height // 2 - self.rectHeight // 2
-        self.padding = padding
+        self.padding = pdg
         self.gameList = games
 
-    def drawGameOuter(self, screenSize):
-        pygame.draw.rect(screenSize, "white", pygame.Rect(self.rectX, self.rectY, self.rectWidth,
-                                                          self.rectHeight), 2, border_radius=10)
 
-    def drawGameInner(self, screenSize):
+    def drawGameButton(self, screenSize):
         newY = self.rectY + self.padding
         newHeight = self.rectHeight - 2 * self.padding
         newWidth = (self.rectWidth - (len(self.gameList) + 1) * self.padding) / (len(self.gameList))
@@ -121,9 +124,12 @@ class Game_menu:
             else:
                 screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
 
+    def run(self, screenSize):
+        self.drawGameButton(screenSize)
+
 class Option_menu(Game_menu):
     def __init__(self):
-        super().__init__(screenWidth, screenHeight, gameList)
+        super().__init__(screenWidth, screenHeight, gameList, padding)
         self.options = optionList
         self.startY = self.rectY + self.padding + self.rectHeight
 
@@ -143,15 +149,14 @@ class Option_menu(Game_menu):
             screen.blit(optionLabel, (optionX, optionY))
 
 
-game = Game_menu(screenWidth, screenHeight, gameList)
+game = Game_menu(screenWidth, screenHeight, gameList, padding)
 option = Option_menu()
 
 running = True
 while running:
     clock.tick(fps)
-    drawBackground(background, logo, authorLabel)
-    game.drawGameOuter(screen)
-    game.drawGameInner(screen)
+    drawBackground(background, logo, authorLabel, screen, screenWidth, screenHeight, padding)
+    game.run(screen)
     option.drawBox()
 
     pygame.display.flip()

@@ -56,8 +56,11 @@ def getGameList():
 
 gameList = sorted(getGameList())
 optionList = ['OPTIONS', 'QUIT']
-menuList = [[0 * len(gameList)], [0 * len(optionList)]]
-menuList[0][0] = 1
+# menuList = [False] * (len(gameList) + len(optionList))
+# menuList[0] = True
+
+menuList = [True, False, False, False, False, False]
+
 # [['Mine Sweeper', 'Space Invader', 'Street Fighter', 'Tetris'],
 # ['OPTIONS', 'QUIT']]
 
@@ -75,7 +78,7 @@ def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
 
 
 class Game_menu:
-    def __init__(self, width, height, games, pdg):
+    def __init__(self, width, height, games, pdg, opn):
         self.screenWidth = width
         self.screenHeight = height
         self.rectWidth = width * 0.8
@@ -85,79 +88,83 @@ class Game_menu:
         self.padding = pdg
         self.gameList = games
 
+        self.newY = self.rectY + self.padding
+        self.newHeight = self.rectHeight - 2 * self.padding
+        self.newWidth = (self.rectWidth - (len(self.gameList) + 1) * self.padding) / (len(self.gameList))
+        self.midpointY = self.newHeight // 2
 
-    def drawGameButton(self, screenSize):
-        newY = self.rectY + self.padding
-        newHeight = self.rectHeight - 2 * self.padding
-        newWidth = (self.rectWidth - (len(self.gameList) + 1) * self.padding) / (len(self.gameList))
-        midpointY = newHeight // 2
-
-        # inserting button and image
-        for imageTile in range(len(self.gameList)):
-            # drawing game tile
-            newX = self.rectX + self.padding + imageTile * (newWidth + self.padding)
-            pygame.draw.rect(screenSize, "white", pygame.Rect(newX, newY, newWidth, newHeight), 2,
-                             border_radius=10)
-
-            # insert image
-            imagePath = os.path.join(self.gameList[imageTile], "assets", "logo.png")
-            imageLoad = pygame.image.load(imagePath)
-            factor = (midpointY - 2 * self.padding) / imageLoad.get_height()
-            imageScale = pygame.transform.scale_by(imageLoad, factor)
-            imageCenter = newWidth // 2 - imageScale.get_width() // 2
-            screen.blit(imageScale, (newX + imageCenter, newY + 2 * self.padding))
-
-            # insert title
-            titleLabel = font.render(gameList[imageTile].upper(), True, "white")
-            titleCenter = newWidth // 2 - titleLabel.get_width() // 2
-            titleCenterY = newY + 1.5 * midpointY - titleLabel.get_height() // 2
-            if titleLabel.get_width() >= newWidth:
-                title = gameList[imageTile].split()
-                label = []
-                for word in title:
-                    label.append(word)
-                for i in range(len(label)):
-                    titleLabel = font.render(label[i].upper(), True, "white")
-                    titleCenter = newWidth // 2 - titleLabel.get_width() // 2
-                    titleCenterY = newY + 1.5 * midpointY - titleLabel.get_height()
-                    screen.blit(titleLabel, (newX + titleCenter, titleCenterY + i * titleLabel.get_height()))
-            else:
-                screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
-
-    def run(self, screenSize):
-        self.drawGameButton(screenSize)
-
-class Option_menu(Game_menu):
-    def __init__(self):
-        super().__init__(screenWidth, screenHeight, gameList, padding)
-        self.options = optionList
+        self.option = opn
         self.startY = self.rectY + self.padding + self.rectHeight
 
+    def drawGameButton(self, screenSize, imageTile, color, thickness):
+        # drawing game tile
+        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
+        pygame.draw.rect(screenSize, color, pygame.Rect(newX, self.newY, self.newWidth, self.newHeight), thickness,
+                         border_radius=10)
 
-    def drawBox(self):
-        for i in range(len(self.options)):
+        # insert image
+        imagePath = os.path.join(self.gameList[imageTile], "assets", "logo.png")
+        imageLoad = pygame.image.load(imagePath)
+        factor = (self.midpointY - 2 * self.padding) / imageLoad.get_height()
+        imageScale = pygame.transform.scale_by(imageLoad, factor)
+        imageCenter = self.newWidth // 2 - imageScale.get_width() // 2
+        screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
 
-            # draw box
-            width = (self.rectWidth - self.padding) // len(self.options)
-            startX = self.rectX + i * (width + self.padding)
-            pygame.draw.rect(screen, "white", pygame.Rect(startX, self.startY, width, 50), 2, border_radius=10)
+        # insert title
+        titleLabel = font.render(gameList[imageTile].upper(), True, color)
+        titleCenter = self.newWidth // 2 - titleLabel.get_width() // 2
+        titleCenterY = self.newY + 1.5 * self.midpointY - titleLabel.get_height() // 2
+        if titleLabel.get_width() >= self.newWidth:
+            title = gameList[imageTile].split()
+            label = []
+            for word in title:
+                label.append(word)
+            for i in range(len(label)):
+                titleLabel = font.render(label[i].upper(), True, color)
+                titleCenter = self.newWidth // 2 - titleLabel.get_width() // 2
+                titleCenterY = self.newY + 1.5 * self.midpointY - titleLabel.get_height()
+                screen.blit(titleLabel, (newX + titleCenter, titleCenterY + i * titleLabel.get_height()))
+        else:
+            screen.blit(titleLabel, (newX + titleCenter, titleCenterY))
 
-            # draw text
-            optionLabel = font.render(self.options[i], True, "white")
-            optionX = startX + width // 2 - optionLabel.get_width() // 2
-            optionY = self.startY + 25 - optionLabel.get_height() // 2
-            screen.blit(optionLabel, (optionX, optionY))
+    def drawOptionButton(self, i, color, thickness):
+        # draw box
+        width = (self.rectWidth - self.padding) // len(self.option)
+        startX = self.rectX + i * (width + self.padding)
+        pygame.draw.rect(screen, color, pygame.Rect(startX, self.startY, width, 50), thickness, border_radius=10)
 
+        # draw text
+        optionLabel = font.render(self.option[i], True, color)
+        optionX = startX + width // 2 - optionLabel.get_width() // 2
+        optionY = self.startY + 25 - optionLabel.get_height() // 2
+        screen.blit(optionLabel, (optionX, optionY))
 
-game = Game_menu(screenWidth, screenHeight, gameList, padding)
-option = Option_menu()
+    def run(self, screenSize,):
+        hoverColor = "green"
+        baseColor = "white"
+        baseThickness = 2
+        hoverThickness = 5
+
+        # draw game tiles
+        for imageTile in range(len(self.gameList)):
+            if menuList[imageTile]:
+                self.drawGameButton(screenSize, imageTile, hoverColor, hoverThickness)
+            else:
+                self.drawGameButton(screenSize, imageTile, baseColor, baseThickness)
+        # draw option tiles
+        for i in range(len(self.option)):
+            if menuList[len(self.gameList) + i]:
+                self.drawOptionButton(i, hoverColor, hoverThickness)
+            else:
+                self.drawOptionButton(i, baseColor, baseThickness)
+
+game = Game_menu(screenWidth, screenHeight, gameList, padding, optionList)
 
 running = True
 while running:
     clock.tick(fps)
     drawBackground(background, logo, authorLabel, screen, screenWidth, screenHeight, padding)
     game.run(screen)
-    option.drawBox()
 
     pygame.display.flip()
     for event in pygame.event.get():

@@ -75,7 +75,7 @@ class Init:
             if os.path.isdir(os.path.join(currentDirectory, entry)) and entry[0].isupper() and not entry.startswith(
                     "P"):
                 self.gamelist.append(entry)
-        return self.gamelist
+        return sorted(self.gamelist)
 
     def run(self):
         self.drawBackground()
@@ -96,8 +96,6 @@ class Navigate:
         dirName = os.path.dirname(__file__)
         dirPath = os.path.join(dirName, nameList[index])
         sys.path.append(dirPath)
-
-
 
     def update(self, events):
         newIndex = None

@@ -1,5 +1,6 @@
 import pygame
 import os
+import sys
 
 # initialize pygame and font
 pygame.init()
@@ -89,6 +90,15 @@ class Navigate:
     def reset(self):
         self.menulist = [False] * len(self.menulist)
 
+    def handleClick(self):
+        nameList = self.gamelist + self.optionlist
+        index = self.menulist.index(True)
+        dirName = os.path.dirname(__file__)
+        dirPath = os.path.join(dirName, nameList[index])
+        sys.path.append(dirPath)
+
+
+
     def update(self, events):
         newIndex = None
         menuLength = len(self.menulist)
@@ -111,6 +121,8 @@ class Navigate:
                 newIndex = gameLength
             elif gameLength // optionLength <= currentIndex < gameLength:
                 newIndex = gameLength + 1
+        if events.key == pygame.K_RETURN or events.key == pygame.K_SPACE:
+            self.handleClick()
         if newIndex is not None:
             self.reset()
             self.menulist[newIndex] = True

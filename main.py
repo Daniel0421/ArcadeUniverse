@@ -80,20 +80,18 @@ class Navigate:
     def reset(self):
         self.menulist = [False] * len(self.menulist)
 
-    def update(self):
-        length = len(self.menulist)
+    def update(self, events):
         newIndex = None
-        for events in pygame.event.get():
-            if events.type == pygame.KEYDOWN:
-                currentIndex = self.menulist.index(True)
-                if events.key == pygame.K_d or events.key == pygame.K_RIGHT:
-                    newIndex = (currentIndex + 1) % length
-                if events.key == pygame.K_a or events.key == pygame.K_LEFT:
-                    newIndex = (currentIndex - 1 + length) % length
+        length = len(self.menulist)
+        currentIndex = self.menulist.index(True)
+        if events.key == pygame.K_d or events.key == pygame.K_RIGHT:
+            newIndex = (currentIndex + 1) % length
+        if events.key == pygame.K_a or events.key == pygame.K_LEFT:
+            newIndex = (currentIndex - 1 + length) % length
 
-                if newIndex is not None:
-                    self.reset()
-                    self.menulist[newIndex] = True
+        if newIndex is not None:
+            self.reset()
+            self.menulist[newIndex] = True
 
 class Game_menu:
     def __init__(self, width, height, games, pdg, opn):
@@ -182,11 +180,12 @@ running = True
 while running:
     clock.tick(fps)
     drawBackground(background, logo, authorLabel, screen, screenWidth, screenHeight, padding)
-    navigate.update()
     game.run(screen)
 
-    pygame.display.flip()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            navigate.update(event)
+    pygame.display.flip()
 pygame.quit()

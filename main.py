@@ -73,6 +73,28 @@ def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
     pygame.draw.rect(screenSize, "white", pygame.Rect(rectX, rectY, rectWidth,
                                                       rectHeight), 2, border_radius=10)
 
+class Navigate:
+    def __init__(self, menu):
+        self.menulist = menu
+
+    def reset(self):
+        self.menulist = [False] * len(self.menulist)
+
+    def update(self):
+        length = len(self.menulist)
+        newIndex = None
+        for events in pygame.event.get():
+            if events.type == pygame.KEYDOWN:
+                currentIndex = self.menulist.index(True)
+                if events.key == pygame.K_d or events.key == pygame.K_RIGHT:
+                    newIndex = (currentIndex + 1) % length
+                if events.key == pygame.K_a or events.key == pygame.K_LEFT:
+                    newIndex = (currentIndex - 1 + length) % length
+
+                if newIndex is not None:
+                    self.reset()
+                    self.menulist[newIndex] = True
+
 class Game_menu:
     def __init__(self, width, height, games, pdg, opn):
         self.screenWidth = width
@@ -155,11 +177,12 @@ class Game_menu:
                 self.drawOptionButton(i, baseColor, baseThickness)
 
 game = Game_menu(screenWidth, screenHeight, gameList, padding, optionList)
-
+navigate = Navigate(menuList)
 running = True
 while running:
     clock.tick(fps)
     drawBackground(background, logo, authorLabel, screen, screenWidth, screenHeight, padding)
+    navigate.update()
     game.run(screen)
 
     pygame.display.flip()

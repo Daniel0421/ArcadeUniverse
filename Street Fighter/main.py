@@ -1,6 +1,8 @@
 import sys
 import pygame
 from fighter import Fighter
+from pathlib import Path
+import os
 
 pygame.init()
 
@@ -43,11 +45,14 @@ YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+currPath = Path(os.getcwd())
+fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
+
 title_font = pygame.font.Font("assets/fonts/turok.ttf", 80)
-cnt_font = pygame.font.Font("assets/fonts/turok.ttf", 80)
-score_font = pygame.font.Font("assets/fonts/turok.ttf", 30)
-controls_font = pygame.font.Font("assets/fonts/turok.ttf", 30)
-start_font = pygame.font.Font("assets/fonts/turok.ttf", 50)
+cnt_font = pygame.font.Font(fontPath, 80)
+score_font = pygame.font.Font(fontPath, 30)
+controls_font = pygame.font.Font(fontPath, 30)
+start_font = pygame.font.Font(fontPath, 50)
 
 def draw_text(text, font, text_col, x, y, outline_col=None):
     if outline_col:

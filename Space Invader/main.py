@@ -1,17 +1,23 @@
+import pathlib
+
 import pygame
 import os
 import time
 import random
-
-pygame.font.init()
+from pathlib import Path
 
 # setup
 pygame.init()
+pygame.font.init()
 width = 750
 height = 750
 blinkInterval = 0.5
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Space Invader")
+
+# Font initialize
+currPath = Path(os.getcwd())
+fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
 
 # load assets (ships)
 redShip = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -29,7 +35,6 @@ blueLaser = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
 
 # load assets (background)
 background = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (width, height))
-
 
 class Bullet:
     def __init__(self, x, y, img):
@@ -49,7 +54,6 @@ class Bullet:
 
     def collision(self, obj):
         return collide(obj, self)
-
 
 class Ship:
     COOLDOWN = 30
@@ -90,9 +94,7 @@ class Ship:
                 obj.health -= 10
                 self.lasers.remove(laser)
 
-
 # inherit Ship class into Player class
-
 class Player(Ship):
     def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
@@ -125,7 +127,6 @@ class Player(Ship):
             self.ship_img.get_width() * (self.health / self.maxHealth),
             10))
 
-
 class Enemy(Ship):
     # Classify images into colors
     colorMap = {
@@ -148,12 +149,10 @@ class Enemy(Ship):
             self.lasers.append(laser)
             self.cool_time = 1
 
-
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
-
 
 def main():
     running = True
@@ -161,8 +160,8 @@ def main():
     level = 0
     lives = 5
     player_velocity = 8
-    main_font = pygame.font.SysFont("comicsans", 50)
-    lost_font = pygame.font.SysFont("comicsans", 60)
+    main_font = pygame.font.Font(fontPath, 50)
+    lost_font = pygame.font.Font(fontPath, 60)
     enemy = []
     wavelength = 5
     enemy_velocity = 2
@@ -252,9 +251,8 @@ def main():
 
         player.move_laser(-bullet_velocity, enemy)
 
-
 def main_menu():
-    menu_font = pygame.font.SysFont("comic-sans", 60)
+    menu_font = pygame.font.Font(fontPath, 60)
     lastVisibleTime = 0.5
     textVisible = True
 
@@ -275,6 +273,5 @@ def main_menu():
             if event.type == pygame.KEYDOWN:
                 main()
     pygame.quit()
-
 
 main_menu()

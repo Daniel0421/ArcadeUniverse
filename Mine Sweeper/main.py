@@ -2,6 +2,8 @@ from game import Game
 from board import Board
 import pygame.font
 import time
+import os
+from pathlib import Path
 
 pygame.font.init()
 
@@ -11,12 +13,17 @@ board = Board(size, prob)
 width, height = 750, 750
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Mine Sweeper")
-menu_font = pygame.font.SysFont("comicsans", 40)
+
+currPath = Path(os.getcwd())
+fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
+
+menu_font = pygame.font.Font(fontPath, 40)
 game = Game(board, (width, height))
 
 menu_label = menu_font.render("Press any key to begin", 1, (0, 0, 0))
-won_label = menu_font.render("You win!", 1, (0,0,0))
-lost_label = menu_font.render("GAME OVER", 1, (0,0,0))
+won_label = menu_font.render("You win!", 1, (0, 0, 0))
+lost_label = menu_font.render("GAME OVER", 1, (0, 0, 0))
+
 
 def main_menu():
     running = True
@@ -30,9 +37,9 @@ def main_menu():
         screen.fill((200, 200, 200))
         currentTime = time.time()
         if board.getLost():
-            screen.blit(lost_label, (width//2 - lost_label.get_width()//2, height//3))
+            screen.blit(lost_label, (width // 2 - lost_label.get_width() // 2, height // 3))
         if board.getWin():
-            screen.blit(won_label, (width//2 - lost_label.get_width()//2, height//3))
+            screen.blit(won_label, (width // 2 - lost_label.get_width() // 2, height // 3))
         if currentTime - lastVisibleTime >= blinkInterval:
             textVisible = not textVisible
             lastVisibleTime = currentTime
@@ -49,5 +56,6 @@ def main_menu():
                 game.run()
 
     pygame.quit()
+
 
 main_menu()

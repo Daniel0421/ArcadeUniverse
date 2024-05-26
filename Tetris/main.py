@@ -1,13 +1,18 @@
 import pygame
 import sys
-
+import os
+from pathlib import Path
 from colors import Colors
 from game import Game
 
 
 pygame.init()
 
-title_font = pygame.font.Font(None, 40)
+# initialize font
+currPath = Path(os.getcwd())
+fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
+
+title_font = pygame.font.Font(fontPath, 40)
 score_surface = title_font.render("Score", True, Colors.white)
 next_surface = title_font.render("Next", True, Colors.white)
 game_over_surface = title_font.render("GAME OVER", True, Colors.white)
@@ -66,15 +71,15 @@ while True:
     score_value_surface = title_font.render(str(game.score), True, Colors.white)
 
     screen.fill(Colors.dark_blue)
-    screen.blit(score_surface, (365, 20, 50, 50))
-    screen.blit(next_surface, (375, 180, 50, 50))
+    screen.blit(score_surface, (349, 20, 50, 50))
+    screen.blit(next_surface, (363, 180, 50, 50))
 
     if game_state == HOME and show_message:
-        screen.blit(start_surface, (320, 450+2*game_over_surface.get_height(), 50, 50))
+        screen.blit(start_surface, (313, 450+2*game_over_surface.get_height(), 50, 50))
     elif game.game_over:
         screen.blit(game_over_surface, (320, 450, 50, 50))
         if show_message:
-            screen.blit(start_surface, (320, 450+2*game_over_surface.get_height(), 50, 50))
+            screen.blit(start_surface, (313, 450+2*game_over_surface.get_height(), 50, 50))
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10)
     screen.blit(score_value_surface,
                 score_value_surface.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))

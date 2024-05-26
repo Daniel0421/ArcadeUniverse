@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import importlib.util
 
 # initialize pygame and font
 pygame.init()
@@ -93,9 +94,38 @@ class Navigate:
     def handleClick(self):
         nameList = self.gamelist + self.optionlist
         index = self.menulist.index(True)
-        dirName = os.path.dirname(__file__)
-        dirPath = os.path.join(dirName, nameList[index])
-        sys.path.append(dirPath)
+        selectedMenu = nameList[index]
+
+        if selectedMenu in self.gamelist:
+            selectedGame = selectedMenu
+            originalPath = os.getcwd()
+            gamePath = os.path.join(originalPath, selectedGame)
+            gameRunPath = os.path.join(gamePath, 'main.py')
+            if os.path.isfile(gameRunPath):
+                sys.path.insert(0, gamePath)  # Add game directory to sys.path
+                os.chdir(gamePath)  # Change the working directory to the game path
+                try:
+                    # Create a module specification from the file location
+                    spec = importlib.util.spec_from_file_location("main", gameRunPath)
+                    # Create a new module based on the specification
+                    main = importlib.util.module_from_spec(spec)
+                    # Insert the new module into sys.modules
+                    sys.modules["main"] = main
+                    # Execute module
+                    spec.loader.exec_module(main)
+                except Exception as e:
+                    print(f"Failed to run the game {selectedGame}: {e}")
+                finally:
+                    os.chdir(originalPath)  # Restore the original working directory
+                    sys.path.pop(0)  # Clean up sys.path after importing
+            else:
+                print(f"The file {gameRunPath} does not exist.")
+        else:
+            selectedOption = selectedMenu
+            if selectedOption == 'QUIT':
+                quit()
+            else:
+                pass
 
     def update(self, events):
         newIndex = None

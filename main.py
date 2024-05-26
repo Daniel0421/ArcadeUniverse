@@ -12,6 +12,7 @@ screenWidth = screenHeight = 750
 fps = 60
 bigFont = 30
 smallFont = 20
+gameList = []
 
 # set paths
 backgroundPath = os.path.join("asset", "background.jpeg")
@@ -43,35 +44,41 @@ logo = pygame.transform.scale(getLogo, (0.5 * getLogo.get_width(), 0.5 * getLogo
 # render texts
 authorLabel = detailFont.render("Made by: Hyunseok Cho, Jihwan Kim", True, "white")
 
-# game list
-def getGameList():
-    games = []
-    currentDirectory = os.getcwd()
-    for entry in os.listdir(currentDirectory):
-        if os.path.isdir(os.path.join(currentDirectory, entry)) and entry[0].isupper() and not entry.startswith("P"):
-            games.append(entry)
-    return games
+class Init:
+    def __init__(self, bg, lgo, lbl, screenSize, width, height, pdg, gamelist):
+        self.bg = bg
+        self.lgo = lgo
+        self.lbl = lbl
+        self.screenSize = screenSize
+        self.width = width
+        self.height = height
+        self.pdg = pdg
+        self.gamelist = gamelist
 
-gameList = sorted(getGameList())
-optionList = ['OPTIONS', 'QUIT']
+    def drawBackground(self):
+        rectWidth = self.width * 0.8
+        rectHeight = self.height * 0.3
+        rectX = self.width // 2 - rectWidth // 2
+        rectY = self.height // 2 - rectHeight // 2
+        screen.blit(self.bg, (0, 0))
+        screen.blit(self.lgo, (self.width // 2 - self.lgo.get_width() // 2, self.lgo.get_height() // 2))
+        screen.blit(self.lbl, (self.width // 2 - self.pdg - self.lbl.get_width() // 2, self.height - self.pdg -
+                               self.lbl.get_height()))
+        pygame.draw.rect(self.screenSize, "white", pygame.Rect(rectX, rectY, rectWidth,
+                                                               rectHeight), 2, border_radius=10)
 
-menuList = [False] * (len(gameList) + len(optionList))
-menuList[0] = True
+    def getGameList(self):
+        self.gamelist = []
+        currentDirectory = os.getcwd()
+        for entry in os.listdir(currentDirectory):
+            if os.path.isdir(os.path.join(currentDirectory, entry)) and entry[0].isupper() and not entry.startswith(
+                    "P"):
+                self.gamelist.append(entry)
+        return self.gamelist
 
-# [['Mine Sweeper', 'Space Invader', 'Street Fighter', 'Tetris'],
-# ['OPTIONS', 'QUIT']]
-
-def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
-    rectWidth = width * 0.8
-    rectHeight = height * 0.3
-    rectX = width // 2 - rectWidth // 2
-    rectY = height // 2 - rectHeight // 2
-    screen.blit(bg, (0, 0))
-    screen.blit(lgo, (width // 2 - lgo.get_width() // 2, lgo.get_height() // 2))
-    screen.blit(lbl, (width // 2 - pdg - lbl.get_width() // 2, height - pdg -
-                      lbl.get_height()))
-    pygame.draw.rect(screenSize, "white", pygame.Rect(rectX, rectY, rectWidth,
-                                                      rectHeight), 2, border_radius=10)
+    def run(self):
+        self.drawBackground()
+        self.getGameList()
 
 class Navigate:
     def __init__(self, menu, gamelist, optionlist):
@@ -171,7 +178,7 @@ class Game_menu:
         optionY = self.startY + 25 - optionLabel.get_height() // 2
         screen.blit(optionLabel, (optionX, optionY))
 
-    def run(self, screenSize,):
+    def run(self, screenSize, ):
         hoverColor = "green"
         baseColor = "white"
         baseThickness = 2
@@ -190,12 +197,19 @@ class Game_menu:
             else:
                 self.drawOptionButton(i, baseColor, baseThickness)
 
+
+init = Init(background, logo, authorLabel, screen, screenWidth, screenHeight, padding, gameList)
+gameList = init.getGameList()
+optionList = ['OPTIONS', 'QUIT']
+menuList = [False] * (len(gameList) + len(optionList))
+menuList[0] = True
+
 game = Game_menu(screenWidth, screenHeight, gameList, padding, optionList)
 navigate = Navigate(menuList, gameList, optionList)
 running = True
 while running:
     clock.tick(fps)
-    drawBackground(background, logo, authorLabel, screen, screenWidth, screenHeight, padding)
+    init.run()
     game.run(screen)
 
     for event in pygame.event.get():

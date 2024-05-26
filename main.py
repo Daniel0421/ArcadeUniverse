@@ -178,7 +178,7 @@ class Game_menu:
         optionY = self.startY + 25 - optionLabel.get_height() // 2
         screen.blit(optionLabel, (optionX, optionY))
 
-    def run(self, screenSize, ):
+    def run(self, screenSize):
         hoverColor = "green"
         baseColor = "white"
         baseThickness = 2

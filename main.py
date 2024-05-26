@@ -92,6 +92,7 @@ class Navigate:
         if newIndex is not None:
             self.reset()
             self.menulist[newIndex] = True
+        return self.menulist
 
 class Game_menu:
     def __init__(self, width, height, games, pdg, opn):
@@ -186,6 +187,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            navigate.update(event)
+            menuList = navigate.update(event)
     pygame.display.flip()
 pygame.quit()

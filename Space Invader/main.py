@@ -5,6 +5,8 @@ import os
 import time
 import random
 from pathlib import Path
+import importlib.util
+import sys
 
 # setup
 pygame.init()
@@ -154,6 +156,20 @@ def collide(obj1, obj2):
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
+def returnMenu():
+    curr_dir = Path(os.getcwd())
+    home_dir = curr_dir.parent
+    os.chdir(home_dir)  # Change to the directory of main.py
+
+    # Reload the main module to reset its state
+    module_name = "main"
+    if module_name in sys.modules:
+        del sys.modules[module_name]  # Remove the existing module from sys.modules
+
+    spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
+    newModule = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = newModule
+    spec.loader.exec_module(newModule)
 def main():
     running = True
     fps = 60
@@ -218,6 +234,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    returnMenu()
 
         # movement
         keys = pygame.key.get_pressed()
@@ -270,7 +289,7 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and event.key is not pygame.K_ESCAPE:
                 main()
     pygame.quit()
 

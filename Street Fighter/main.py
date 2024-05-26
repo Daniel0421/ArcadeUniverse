@@ -3,6 +3,7 @@ import pygame
 from fighter import Fighter
 from pathlib import Path
 import os
+import importlib.util
 
 pygame.init()
 
@@ -98,6 +99,21 @@ def show_controls_screen():
 fighter_1 = Fighter(1, 200, 310, False, warrior_data, warrior_sheet, WARRIOR_STEPS)
 fighter_2 = Fighter(2, 700, 310, True, wizard_data, wizard_sheet, WIZARD_STEPS)
 
+def returnMenu():
+    curr_dir = Path(os.getcwd())
+    home_dir = curr_dir.parent
+    os.chdir(home_dir)  # Change to the directory of main.py
+
+    # Reload the main module to reset its state
+    module_name = "main"
+    if module_name in sys.modules:
+        del sys.modules[module_name]  # Remove the existing module from sys.modules
+
+    spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
+    newModule = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = newModule
+    spec.loader.exec_module(newModule)
+
 run = True
 
 while run:
@@ -113,13 +129,15 @@ while run:
                 show_controls = False
                 Game_run = True
                 intro_cnt = 3  # Start countdown
+            if event.key == pygame.K_ESCAPE:
+                returnMenu()
 
     if show_controls:
         show_controls_screen()
-    elif Game_run == False:
+    elif not Game_run:
         draw_bg()
 
-    elif Game_run == True:
+    elif Game_run:
         draw_bg()
 
         draw_hb(fighter_1.health, 20, 20)

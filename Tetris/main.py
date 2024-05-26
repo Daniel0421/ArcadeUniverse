@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from colors import Colors
 from game import Game
-
+import importlib.util
 
 pygame.init()
 
@@ -27,7 +27,6 @@ pygame.display.set_caption("TETRIS")
 clock = pygame.time.Clock()
 
 game = Game()
-
 
 # game state
 HOME, PLAYING = 'HOME', 'PLAYING'
@@ -62,6 +61,20 @@ while True:
                     game.update_score(0, 1)
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     game.rotate()
+                if event.key == pygame.K_ESCAPE:
+                    curr_dir = Path(os.getcwd())
+                    home_dir = curr_dir.parent
+                    os.chdir(home_dir)  # Change to the directory of main.py
+
+                    # Reload the main module to reset its state
+                    module_name = "main"
+                    if module_name in sys.modules:
+                        del sys.modules[module_name]  # Remove the existing module from sys.modules
+
+                    spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
+                    newModule = importlib.util.module_from_spec(spec)
+                    sys.modules[module_name] = newModule
+                    spec.loader.exec_module(newModule)
         if event.type == GAME_UPDATE and not game.game_over and game_state == PLAYING:
             game.move_down()
         if event.type == BLINK_UPDATE:

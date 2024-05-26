@@ -74,21 +74,36 @@ def drawBackground(bg, lgo, lbl, screenSize, width, height, pdg):
                                                       rectHeight), 2, border_radius=10)
 
 class Navigate:
-    def __init__(self, menu):
+    def __init__(self, menu, gamelist, optionlist):
         self.menulist = menu
+        self.gamelist = gamelist
+        self.optionlist = optionlist
 
     def reset(self):
         self.menulist = [False] * len(self.menulist)
 
     def update(self, events):
         newIndex = None
-        length = len(self.menulist)
+        menuLength = len(self.menulist)
+        gameLength = len(self.gamelist)
+        optionLength = len(self.optionlist)
         currentIndex = self.menulist.index(True)
         if events.key == pygame.K_d or events.key == pygame.K_RIGHT:
-            newIndex = (currentIndex + 1) % length
+            if currentIndex + 1 < menuLength:
+                newIndex = currentIndex + 1
         if events.key == pygame.K_a or events.key == pygame.K_LEFT:
-            newIndex = (currentIndex - 1 + length) % length
-
+            if currentIndex - 1 >= 0:
+                newIndex = currentIndex - 1
+        if events.key == pygame.K_w or events.key == pygame.K_UP:
+            if currentIndex == gameLength:
+                newIndex = 0
+            elif currentIndex == gameLength + gameLength // optionLength - 1:
+                newIndex = gameLength // optionLength
+        if events.key == pygame.K_s or events.key == pygame.K_DOWN:
+            if 0 <= currentIndex < gameLength // optionLength:
+                newIndex = gameLength
+            elif gameLength // optionLength <= currentIndex < gameLength:
+                newIndex = gameLength + 1
         if newIndex is not None:
             self.reset()
             self.menulist[newIndex] = True
@@ -176,7 +191,7 @@ class Game_menu:
                 self.drawOptionButton(i, baseColor, baseThickness)
 
 game = Game_menu(screenWidth, screenHeight, gameList, padding, optionList)
-navigate = Navigate(menuList)
+navigate = Navigate(menuList, gameList, optionList)
 running = True
 while running:
     clock.tick(fps)

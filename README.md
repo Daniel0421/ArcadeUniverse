@@ -1,55 +1,121 @@
-# Space Invader
+# Arcade Universe
 
-Space Invader is a classic arcade-style shooting game implemented in Python using the Pygame library. In this game, the player controls a spaceship and aims to survive against waves of enemy spaceships while shooting them down. The game features multiple levels, increasing difficulty, and an engaging gameplay experience reminiscent of the retro arcade era.
+Welcome to the Arcade Universe repository! This project contains four classic games implemented in Python using Pygame: Space Invader, Street Fighter, Tetris, and Minesweeper. Each game is designed to be run independently and provides a nostalgic gaming experience.
 
-![Space Invader Gameplay](demo/space_invader_demo.gif)
+![Arcade Universe](asset/homescreen.png)
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [How to Play](#how-to-play)
-- [Game Controls](#game-controls)
-- [Features](#features)
+- [Games Included](#games-included)
+  - [Space Invader](#1-space-invader)
+  - [Street Fighter](#2-street-fighter)
+  - [Tetris](#3-tetris)
+  - [Minesweeper](#4-minesweeper)
+- [Getting Started](#getting-started)
+- [Requirements](#requirements)
+- [Developers](#developers)
 - [Future Improvements](#future-improvements)
 - [Contributing](#contributing)
 
-## Installation
+## Games Included
 
-To run Space Invader, make sure you have Python and Pygame installed on your system. You can install Pygame using pip:
+### 1. Space Invader
+Space Invader is a classic arcade game where the player controls a spaceship and must shoot down incoming aliens while avoiding their attacks.
 
+#### Features:
+- Multiple levels with increasing difficulty.
+- Different types of alien enemies.
+- Power-ups for enhanced firepower.
+- High-score tracking.
 
-Clone this repository or download the source code as a ZIP file. Navigate to the directory containing the `space_invader.py` file and run it using Python:
+#### How to Play:
+- **Movement**: Use the arrow keys to move the spaceship left and right.
+- **Shooting**: Press the space bar to shoot.
+- **Goal**: Destroy all aliens to advance to the next level without getting hit.
 
+### 2. Street Fighter
+Street Fighter is a fighting game where players choose characters to battle against each other. The goal is to deplete the opponent's health bar to win the match.
 
-## How to Play
+#### Features:
+- Multiple playable characters with unique moves and abilities.
+- Single-player and multiplayer modes.
+- Special moves and combos.
+- Dynamic background and sound effects.
 
-Once you run the game, you will be greeted with the main menu. Press any key to begin the game.
+#### How to Play:
+- **Movement**: Use the arrow keys to move your character.
+- **Attacks**: Use specific keys (e.g., A, S, D) for different attacks and special moves.
+- **Goal**: Defeat your opponent by reducing their health to zero.
 
-- Control your spaceship using the arrow keys or WASD keys.
-- Shoot lasers at enemy spaceships by pressing the Spacebar.
-- Dodge enemy fire and survive as long as possible.
-- Defeat waves of enemy spaceships to progress to higher levels.
-- Monitor your health and lives at the top of the screen.
-- The game ends when you run out of lives or health.
+### 3. Tetris
+Tetris is a tile-matching puzzle game where the player must fit falling blocks together to complete lines, which are then cleared from the screen.
 
-## Game Controls
+#### Features:
+- Classic Tetris gameplay with smooth controls.
+- Increasing speed and difficulty over time.
+- Score and level tracking.
+- Hold and preview features for strategic gameplay.
 
-- **Movement:** Arrow keys (Up, Down, Left, Right) or WASD keys
-- **Shoot:** Spacebar
+#### How to Play:
+- **Movement**: Use the arrow keys to move and rotate the falling blocks.
+- **Drop**: Press the down arrow to drop blocks faster.
+- **Goal**: Complete horizontal lines to clear them and score points. The game ends when the blocks stack to the top of the screen.
 
-## Features
+### 4. Minesweeper
+Minesweeper is a puzzle game where the player must clear a grid of hidden mines without detonating any of them, using clues about the number of neighboring mines in each cell.
 
-- Classic arcade-style gameplay inspired by Space Invaders.
-- Player spaceship with health and lives system.
-- Multiple levels of increasing difficulty.
-- Enemy spaceships with different colors and firing patterns.
-- Responsive controls and smooth animations.
-- Main menu for easy navigation.
+#### Features:
+- Customizable grid sizes and difficulty levels.
+- Flagging system to mark suspected mines.
+- Timer and score tracking.
+- Intuitive user interface.
 
+#### How to Play:
+- **Reveal Cells**: Click on cells to reveal them.
+- **Flag Mines**: Right-click to place a flag on cells you suspect contain mines.
+- **Goal**: Clear all non-mine cells to win, using numbers to deduce mine locations.
+
+## Getting Started
+
+To run any of these games, you need to have Python installed on your system. Follow these steps to get started:
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/Daniel0421/ArcadeUniverse.git
+    ```
+
+2. Install the required dependencies using pip:
+    ```bash
+    pip install pygame
+    ```
+
+3. Navigate to the game you want to play and run the `main.py` file:
+    ```bash
+    python main.py
+    ```
+
+4. Enjoy the game :)
+
+## Requirements
+
+- Python 3.x
+- Pygame (for graphical games)
+- Additional libraries required: Numpy, Pillow (for physics and OS handling)
+
+Install the required dependencies using pip:
+```bash
+pip install numpy
+```
+```bash
+pip install Pillow
+```
+## Developers
+Two Computer Engineering students at the University of Illinois at Urbana-Champaign:
+
+#### Hyunseok Cho
+#### Jihwan Kim
 ## Future Improvements
-
-Although Space Invader is fully functional, there are several areas where it can be improved:
-
+Below will be implemented with the upcoming update:
 - Implement sound effects and background music for a more immersive experience.
 - Add power-ups or special abilities to enhance gameplay variety.
 - Introduce more enemy types with unique behaviors and attack patterns.
@@ -57,5 +123,8 @@ Although Space Invader is fully functional, there are several areas where it can
 - Optimize code for better performance and maintainability.
 
 ## Contributing
+Contributions are welcome! Feel free to open issues or submit pull requests to improve the games or add new features. When contributing, please ensure you follow the coding standards and include appropriate tests.
 
-Contributions are welcome! If you have any ideas for new features, improvements, or bug fixes, feel free to open an issue or submit a pull request. For major changes, please discuss them first by opening an issue to ensure they align with the project's goals.
+## Acknowledgments
+Special thanks to the creators of the original games for their inspiration.
+Thanks to the open-source community for their valuable resources and support.

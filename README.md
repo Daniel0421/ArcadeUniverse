@@ -38,7 +38,7 @@ Space Invader is a classic arcade game where the player controls a spaceship and
 ### 2. Street Fighter
 Street Fighter is a fighting game where players choose characters to battle against each other. The goal is to deplete the opponent's health bar to win the match.
 
-<img src="asset/streetfighter.png" alt="Street Fighter" width="200"/>
+<img src="asset/streetfighter.png" alt="Street Fighter" width="260"/>
 
 #### Features:
 - Multiple playable characters with unique moves and abilities.

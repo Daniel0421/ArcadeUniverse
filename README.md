@@ -120,8 +120,8 @@ pip install Pillow
 ## Developers
 Two Computer Engineering students at the University of Illinois at Urbana-Champaign:
 
-#### Hyunseok Cho
-#### Jihwan Kim
+#### [Hyunseok Cho](https://github.com/Daniel0421)
+#### [Jihwan Kim](https://github.com/jhkim160589)
 ## Future Improvements
 Below will be implemented with the upcoming update:
 - Implement sound effects and background music for a more immersive experience.

@@ -192,12 +192,6 @@ class Game_menu:
 
     def drawImageGIF(self, imageTile):
         current_time = time.time()
-        if current_time - self.last_update_time[imageTile] > self.speed:
-            self.last_update_time[imageTile] = current_time
-            self.frame_counters[imageTile] = (self.frame_counters[imageTile] + 1) % len(
-                os.listdir(os.path.join(self.gameList[imageTile], "assets", "GIF")))
-
-        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
         gifPath = os.path.join(self.gameList[imageTile], "assets", "GIF")
         imageList = []
 
@@ -208,6 +202,11 @@ class Game_menu:
         else:
             return
 
+        # Ensure frame_counters is within the bounds of imageList
+        if current_time - self.last_update_time[imageTile] > self.speed:
+            self.last_update_time[imageTile] = current_time
+            self.frame_counters[imageTile] = (self.frame_counters[imageTile] + 1) % len(imageList)
+
         # Get the correct frame using the frame counter
         counter = self.frame_counters[imageTile]
         imagePath = os.path.join(gifPath, imageList[counter])
@@ -217,8 +216,8 @@ class Game_menu:
         imageScale = pygame.transform.scale(imageLoad, (int(imageLoad.get_width() * factor),
                                                         int(imageLoad.get_height() * factor)))
         imageCenter = self.newWidth // 2 - imageScale.get_width() // 2
+        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
         self.screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
-
 
     def drawGameButton(self, screenSize, imageTile, color, thickness):
         # drawing game tile

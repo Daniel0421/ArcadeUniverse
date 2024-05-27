@@ -1,6 +1,5 @@
 from PIL import Image
 import os
-
 def remove_icc_profile(image_folder):
     for root, _, files in os.walk(image_folder):
         for file in files:
@@ -14,7 +13,18 @@ def remove_icc_profile(image_folder):
                         img_without_icc.putdata(data)
                         img_without_icc.save(image_path)
 
-# Example usage
-currDir = os.getcwd()
-folderPath = os.path.join(currDir, 'Mine Sweeper', 'assets', 'gif')
-remove_icc_profile(folderPath)
+def getGameList():
+    gamelist = []
+    currentDirectory = os.getcwd()
+    for entry in os.listdir(currentDirectory):
+        if os.path.isdir(os.path.join(currentDirectory, entry)) and entry[0].isupper() and not entry.startswith(
+                "P"):
+            gamelist.append(entry)
+    return sorted(gamelist)
+gameList = getGameList()
+
+for game in gameList:
+    gameDir = os.path.join(os.getcwd(), game)
+    pngDir = os.path.join(gameDir, 'assets', 'gif')
+    if os.path.isdir(pngDir):
+        remove_icc_profile(pngDir)

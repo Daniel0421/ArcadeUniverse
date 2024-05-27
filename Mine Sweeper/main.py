@@ -2,6 +2,8 @@ import os
 import pygame.font
 from pathlib import Path
 from board import Board
+import importlib.util
+import sys
 
 pygame.font.init()
 currPath = Path(os.getcwd())
@@ -26,13 +28,29 @@ menu_label = menu_font.render("Press any key to begin", 1, (0, 0, 0))
 won_label = menu_font.render("You win!", 1, (0, 0, 0))
 lost_label = menu_font.render("GAME OVER", 1, (0, 0, 0))
 class Game:
-    def __init__(self, board, window):
+    def __init__(self, tile, window):
         self.image = None
         self.screen = None
-        self.board = board
+        self.board = tile
         self.window = window
         self.tileSize = self.window[0]//self.board.getSize()[1], self.window[1]//self.board.getSize()[0]
         self.loadImage()
+
+    @staticmethod
+    def returnMenu(self):
+        curr_dir = Path(os.getcwd())
+        home_dir = curr_dir.parent
+        os.chdir(home_dir)  # Change to the directory of main.py
+
+        # Reload the main module to reset its state
+        module_name = "main"
+        if module_name in sys.modules:
+            del sys.modules[module_name]  # Remove the existing module from sys.modules
+
+        spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
+        newModule = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = newModule
+        spec.loader.exec_module(newModule)
 
     def run(self):
         pygame.init()
@@ -50,8 +68,8 @@ class Game:
                 self.draw()
             pygame.display.flip()
             if self.board.getWin() or self.board.getLost():
-                pygame.time.delay(500)
-                running = False
+                pygame.time.delay(5000)
+                self.returnMenu(self)
             pygame.display.flip()
 
 

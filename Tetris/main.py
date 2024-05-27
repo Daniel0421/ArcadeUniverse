@@ -38,6 +38,21 @@ pygame.time.set_timer(GAME_UPDATE, 200)
 pygame.time.set_timer(BLINK_UPDATE, 500)
 pygame.key.set_repeat(100, 200)
 
+def returnMenu():
+    curr_dir = Path(os.getcwd())
+    home_dir = curr_dir.parent
+    os.chdir(home_dir)  # Change to the directory of main.py
+
+    # Reload the main module to reset its state
+    module_name = "main"
+    if module_name in sys.modules:
+        del sys.modules[module_name]  # Remove the existing module from sys.modules
+
+    spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
+    newModule = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = newModule
+    spec.loader.exec_module(newModule)
+
 show_message = True
 
 while True:
@@ -62,19 +77,7 @@ while True:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     game.rotate()
                 if event.key == pygame.K_ESCAPE:
-                    curr_dir = Path(os.getcwd())
-                    home_dir = curr_dir.parent
-                    os.chdir(home_dir)  # Change to the directory of main.py
-
-                    # Reload the main module to reset its state
-                    module_name = "main"
-                    if module_name in sys.modules:
-                        del sys.modules[module_name]  # Remove the existing module from sys.modules
-
-                    spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
-                    newModule = importlib.util.module_from_spec(spec)
-                    sys.modules[module_name] = newModule
-                    spec.loader.exec_module(newModule)
+                    returnMenu()
         if event.type == GAME_UPDATE and not game.game_over and game_state == PLAYING:
             game.move_down()
         if event.type == BLINK_UPDATE:

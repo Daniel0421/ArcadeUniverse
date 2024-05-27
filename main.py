@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import importlib.util
+import time
 
 # initialize pygame and font
 pygame.init()
@@ -15,6 +16,7 @@ fps = 60
 bigFont = 30
 smallFont = 20
 gameList = []
+counter = 0
 
 # set paths
 backgroundPath = os.path.join("asset", "background.jpeg")
@@ -157,7 +159,7 @@ class Navigate:
         return self.menulist
 
 class Game_menu:
-    def __init__(self, width, height, games, pdg, opn):
+    def __init__(self, width, height, games, pdg, opn, speed=0.1):
         self.screenWidth = width
         self.screenHeight = height
         self.rectWidth = width * 0.8
@@ -166,6 +168,7 @@ class Game_menu:
         self.rectY = height // 2 - self.rectHeight // 2
         self.padding = pdg
         self.gameList = games
+        self.screen = pygame.display.set_mode((width, height))
 
         self.newY = self.rectY + self.padding
         self.newHeight = self.rectHeight - 2 * self.padding
@@ -175,19 +178,52 @@ class Game_menu:
         self.option = opn
         self.startY = self.rectY + self.padding + self.rectHeight
 
-    def drawGameButton(self, screenSize, imageTile, color, thickness):
-        # drawing game tile
-        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
-        pygame.draw.rect(screenSize, color, pygame.Rect(newX, self.newY, self.newWidth, self.newHeight), thickness,
-                         border_radius=10)
+        self.frame_counters = [0] * len(gameList)
+        self.last_update_time = [time.time()] * len(gameList)
+        self.speed = speed
 
-        # insert image
+    def drawImageStatic(self, imageTile):
+        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
         imagePath = os.path.join(self.gameList[imageTile], "assets", "logo.png")
         imageLoad = pygame.image.load(imagePath)
         factor = (self.midpointY - 2 * self.padding) / imageLoad.get_height()
         imageScale = pygame.transform.scale_by(imageLoad, factor)
         imageCenter = self.newWidth // 2 - imageScale.get_width() // 2
+        self.screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
+
+    def drawImageGIF(self, imageTile):
+        current_time = time.time()
+        if current_time - self.last_update_time[imageTile] > self.speed:
+            self.last_update_time[imageTile] = current_time
+            self.frame_counters[imageTile] = (self.frame_counters[imageTile] + 1) % len(
+                os.listdir(os.path.join(self.gameList[imageTile], "assets", "GIF")))
+
+        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
+        gifPath = os.path.join(self.gameList[imageTile], "assets", "GIF")
+        imageList = []
+
+        if os.path.isdir(gifPath):
+            for filename in sorted(os.listdir(gifPath)):
+                if filename.endswith(".png"):
+                    imageList.append(filename)
+        else:
+            return
+
+        counter = self.frame_counters[imageTile]
+        imagePath = os.path.join(gifPath, imageList[counter])
+
+        imageLoad = pygame.image.load(imagePath)
+        factor = (self.midpointY - 2 * self.padding) / imageLoad.get_height()
+        imageScale = pygame.transform.scale(imageLoad, (int(imageLoad.get_width() * factor),
+                                                        int(imageLoad.get_height() * factor)))
+        imageCenter = self.newWidth // 2 - imageScale.get_width() // 2
         screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
+
+    def drawGameButton(self, screenSize, imageTile, color, thickness):
+        # drawing game tile
+        newX = self.rectX + self.padding + imageTile * (self.newWidth + self.padding)
+        pygame.draw.rect(screenSize, color, pygame.Rect(newX, self.newY, self.newWidth, self.newHeight), thickness,
+                         border_radius=10)
 
         # insert title
         titleLabel = font.render(gameList[imageTile].upper(), True, color)
@@ -224,12 +260,22 @@ class Game_menu:
         baseThickness = 2
         hoverThickness = 4
 
+        if counter < fps / 3:
+            counter += 1
+            if counter >= 3:
+                flicker = False
+        else:
+            counter = 0
+            flicker = True
+
         # draw game tiles
         for imageTile in range(len(self.gameList)):
             if menuList[imageTile]:
                 self.drawGameButton(screenSize, imageTile, hoverColor, hoverThickness)
+                self.drawImageGIF(imageTile)
             else:
                 self.drawGameButton(screenSize, imageTile, baseColor, baseThickness)
+                self.drawImageStatic(imageTile)
         # draw option tiles
         for i in range(len(self.option)):
             if menuList[len(self.gameList) + i]:

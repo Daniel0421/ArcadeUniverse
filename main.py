@@ -16,7 +16,6 @@ fps = 60
 bigFont = 30
 smallFont = 20
 gameList = []
-counter = 0
 
 # set paths
 backgroundPath = os.path.join("asset", "background.jpeg")
@@ -209,6 +208,7 @@ class Game_menu:
         else:
             return
 
+        # Get the correct frame using the frame counter
         counter = self.frame_counters[imageTile]
         imagePath = os.path.join(gifPath, imageList[counter])
 
@@ -217,7 +217,8 @@ class Game_menu:
         imageScale = pygame.transform.scale(imageLoad, (int(imageLoad.get_width() * factor),
                                                         int(imageLoad.get_height() * factor)))
         imageCenter = self.newWidth // 2 - imageScale.get_width() // 2
-        screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
+        self.screen.blit(imageScale, (newX + imageCenter, self.newY + 2 * self.padding))
+
 
     def drawGameButton(self, screenSize, imageTile, color, thickness):
         # drawing game tile
@@ -259,14 +260,6 @@ class Game_menu:
         baseColor = "white"
         baseThickness = 2
         hoverThickness = 4
-
-        if counter < fps / 3:
-            counter += 1
-            if counter >= 3:
-                flicker = False
-        else:
-            counter = 0
-            flicker = True
 
         # draw game tiles
         for imageTile in range(len(self.gameList)):

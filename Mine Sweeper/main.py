@@ -1,13 +1,14 @@
-from game import Game
-from board import Board
-import pygame.font
-import time
 import os
-import sys
+import pygame.font
 from pathlib import Path
-import importlib.util
+from board import Board
 
 pygame.font.init()
+currPath = Path(os.getcwd())
+fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
+
+menu_font = pygame.font.Font(fontPath, 60)
+lost_label = menu_font.render("Game Over", 1, (0, 0, 0))
 
 size = (9, 9)
 prob = 0.4
@@ -20,58 +21,78 @@ currPath = Path(os.getcwd())
 fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
 
 menu_font = pygame.font.Font(fontPath, 40)
-game = Game(board, (width, height))
 
 menu_label = menu_font.render("Press any key to begin", 1, (0, 0, 0))
 won_label = menu_font.render("You win!", 1, (0, 0, 0))
 lost_label = menu_font.render("GAME OVER", 1, (0, 0, 0))
+class Game:
+    def __init__(self, board, window):
+        self.image = None
+        self.screen = None
+        self.board = board
+        self.window = window
+        self.tileSize = self.window[0]//self.board.getSize()[1], self.window[1]//self.board.getSize()[0]
+        self.loadImage()
 
-def main_menu():
-    def returnMenu():
-        curr_dir = Path(os.getcwd())
-        home_dir = curr_dir.parent
-        os.chdir(home_dir)  # Change to the directory of main.py
+    def run(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode(self.window)
+        running = True
 
-        # Reload the main module to reset its state
-        module_name = "main"
-        if module_name in sys.modules:
-            del sys.modules[module_name]  # Remove the existing module from sys.modules
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    position = pygame.mouse.get_pos()
+                    rightClick = pygame.mouse.get_pressed()[2]
+                    self.handleClick(position, rightClick)
+                self.draw()
+            pygame.display.flip()
+            if self.board.getWin() or self.board.getLost():
+                pygame.time.delay(500)
+                running = False
+            pygame.display.flip()
 
-        spec = importlib.util.spec_from_file_location(module_name, home_dir / "main.py")
-        newModule = importlib.util.module_from_spec(spec)
-        sys.modules[module_name] = newModule
-        spec.loader.exec_module(newModule)
 
-    # Blinking message
-    textVisible = True
-    lastVisibleTime = time.time()
-    blinkInterval = 0.5
+    def draw(self):
+        start = (0, 0)
+        for row in range(self.board.getSize()[0]):
+            for col in range(self.board.getSize()[1]):
+                tile = self.board.getTile((row, col))
+                image = self.initImage(tile)
+                self.screen.blit(image, start)
+                start = start[0] + self.tileSize[0], start[1]
+            start = 0, start[1] + self.tileSize[1]
 
-    running = True
-    while running:
-        screen.fill((200, 200, 200))
-        currentTime = time.time()
-        if board.getLost():
-            screen.blit(lost_label, (width // 2 - lost_label.get_width() // 2, height // 3))
-        if board.getWin():
-            screen.blit(won_label, (width // 2 - lost_label.get_width() // 2, height // 3))
-        if currentTime - lastVisibleTime >= blinkInterval:
-            textVisible = not textVisible
-            lastVisibleTime = currentTime
-        if textVisible:
-            screen.blit(menu_label, (width / 2 - menu_label.get_width() / 2,
-                                     height / 2 - menu_label.get_height() / 2))
-        pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    returnMenu()
-            if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:
-                game.reset()
-                board.reset()
-                game.run()
+    def loadImage(self):
+        self.image = {}
+        for file in os.listdir("assets"):
+            if file.endswith("png"):
+                image = pygame.image.load(r"assets/" + file)
+                image = pygame.transform.scale(image, self.tileSize)
+                self.image[file.split(".")[0]] = image
 
-    pygame.quit()
-main_menu()
+    def initImage(self, tile):
+        string = None
+        if tile.getClicked():
+            string = "bomb-at-clicked-block" if tile.getHasBomb() else str(tile.getBoundary())
+        else:
+            string = "flag" if tile.getFlagged() else "empty-block"
+
+        return self.image[string]
+
+    def handleClick(self, position, rightClick):
+        if self.board.getLost():
+            return
+        index = position[1] // self.tileSize[1], position[0] // self.tileSize[0]
+        tile = self.board.getTile(index)
+        self.board.handleClick(tile, rightClick)
+
+    def reset(self):
+        self.image = None
+        self.screen = None
+        self.loadImage()
+
+game = Game(board, (width, height))
+game.run()

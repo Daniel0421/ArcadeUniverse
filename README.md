@@ -22,6 +22,8 @@ Welcome to the Arcade Universe repository! This project contains four classic ga
 ### 1. Space Invader
 Space Invader is a classic arcade game where the player controls a spaceship and must shoot down incoming aliens while avoiding their attacks.
 
+<img src="asset/spaceinvader.png" alt="Space Invader" width="260"/>
+
 #### Features:
 - Multiple levels with increasing difficulty.
 - Different types of alien enemies.
@@ -35,6 +37,8 @@ Space Invader is a classic arcade game where the player controls a spaceship and
 
 ### 2. Street Fighter
 Street Fighter is a fighting game where players choose characters to battle against each other. The goal is to deplete the opponent's health bar to win the match.
+
+<img src="asset/streetfighter.png" alt="Street Fighter" width="200"/>
 
 #### Features:
 - Multiple playable characters with unique moves and abilities.
@@ -50,6 +54,8 @@ Street Fighter is a fighting game where players choose characters to battle agai
 ### 3. Tetris
 Tetris is a tile-matching puzzle game where the player must fit falling blocks together to complete lines, which are then cleared from the screen.
 
+<img src="asset/tetris.png" alt="Tetris" width="260"/>
+
 #### Features:
 - Classic Tetris gameplay with smooth controls.
 - Increasing speed and difficulty over time.
@@ -63,6 +69,8 @@ Tetris is a tile-matching puzzle game where the player must fit falling blocks t
 
 ### 4. Minesweeper
 Minesweeper is a puzzle game where the player must clear a grid of hidden mines without detonating any of them, using clues about the number of neighboring mines in each cell.
+
+<img src="asset/minesweeper.png" alt="Minesweeper" width="260"/>
 
 #### Features:
 - Customizable grid sizes and difficulty levels.

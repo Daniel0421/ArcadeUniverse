@@ -4,13 +4,13 @@ from pathlib import Path
 from board import Board
 import importlib.util
 import sys
+import time
 
 pygame.font.init()
 currPath = Path(os.getcwd())
 fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
 
 menu_font = pygame.font.Font(fontPath, 60)
-lost_label = menu_font.render("Game Over", 1, (0, 0, 0))
 
 size = (9, 9)
 prob = 0.4
@@ -22,22 +22,20 @@ pygame.display.set_caption("Mine Sweeper")
 currPath = Path(os.getcwd())
 fontPath = os.path.join(currPath.parent, "asset", "font.ttf")
 
-menu_font = pygame.font.Font(fontPath, 40)
-
-menu_label = menu_font.render("Press any key to begin", 1, (0, 0, 0))
-won_label = menu_font.render("You win!", 1, (0, 0, 0))
-lost_label = menu_font.render("GAME OVER", 1, (0, 0, 0))
 class Game:
-    def __init__(self, tile, window):
+    def __init__(self, tile, window, font):
         self.image = None
         self.screen = None
         self.board = tile
         self.window = window
         self.tileSize = self.window[0]//self.board.getSize()[1], self.window[1]//self.board.getSize()[0]
         self.loadImage()
+        self.font = font
+        self.gameStarted = False
+        self.gameOver = False
 
     @staticmethod
-    def returnMenu(self):
+    def returnMenu():
         curr_dir = Path(os.getcwd())
         home_dir = curr_dir.parent
         os.chdir(home_dir)  # Change to the directory of main.py
@@ -52,25 +50,67 @@ class Game:
         sys.modules[module_name] = newModule
         spec.loader.exec_module(newModule)
 
+    def resetGame(self):
+        self.board = Board(size, prob)
+        self.gameStarted = False
+        self.gameOver = False
+        self.loadImage()
+
     def run(self):
         pygame.init()
         self.screen = pygame.display.set_mode(self.window)
+        clock = pygame.time.Clock()
+
+        textVisible = True
+        blinkInterval = 0.5
+        lastVisibleTime = time.time()
+
+        menu_label = self.font.render("Press any key to begin", 1, (0, 0, 0))
+        won_label = self.font.render("You win!", 1, (0, 0, 0))
+        lost_label = self.font.render("GAME OVER", 1, (0, 0, 0))
+        restart_label = self.font.render("Press any key to start again", 1, (0, 0, 0))
+
         running = True
 
         while running:
+            screen.fill((200, 200, 200))
+            currentTime = time.time()
+
+            if self.board.getLost():
+                self.draw()
+                screen.blit(lost_label, (width // 2 - lost_label.get_width() // 2, height // 3))
+                self.gameOver = True
+            elif self.board.getWin():
+                screen.blit(won_label, (width // 2 - won_label.get_width() // 2, height // 3))
+                self.gameOver = True
+            else:
+                if not self.gameStarted:
+                    if currentTime - lastVisibleTime >= blinkInterval:
+                        textVisible = not textVisible
+                        lastVisibleTime = currentTime
+                    if textVisible:
+                        screen.blit(menu_label, (width / 2 - menu_label.get_width() / 2,
+                                                 height / 2 - menu_label.get_height() / 2))
+                else:
+                    self.draw()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and self.gameStarted and not self.gameOver:
                     position = pygame.mouse.get_pos()
                     rightClick = pygame.mouse.get_pressed()[2]
                     self.handleClick(position, rightClick)
-                self.draw()
+                if event.type == pygame.KEYDOWN:
+                    if not self.gameStarted:
+                        self.gameStarted = True
+                    elif self.gameOver:
+                        self.resetGame()
+                    if event.key == pygame.K_ESCAPE:
+                        self.returnMenu()
             pygame.display.flip()
-            if self.board.getWin() or self.board.getLost():
-                pygame.time.delay(5000)
-                self.returnMenu(self)
-            pygame.display.flip()
+            clock.tick(60)
+        pygame.quit()
 
 
     def draw(self):
@@ -112,5 +152,5 @@ class Game:
         self.screen = None
         self.loadImage()
 
-game = Game(board, (width, height))
+game = Game(board, (width, height), menu_font)
 game.run()
